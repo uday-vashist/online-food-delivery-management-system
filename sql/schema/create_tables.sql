@@ -3,7 +3,8 @@
 -- File: create_tables.sql
 -- Description: All CREATE TABLE statements with constraints
 -- ============================================================
-
+CREATE DATABASE food_delivery;
+USE food_delivery;
 -- Drop existing tables in reverse FK order to avoid constraint errors
 DROP TABLE IF EXISTS OrderCoupon;
 DROP TABLE IF EXISTS OrderItem;
