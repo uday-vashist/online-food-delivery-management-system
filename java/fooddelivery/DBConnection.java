@@ -23,8 +23,8 @@ public final class DBConnection {
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 System.out.println("Database connected successfully.");
             } catch (ClassNotFoundException e) {
-                throw new SQLException("MySQL Driver not found: " + e.getMessage());
-            }
+        throw new DatabaseConnectionException("MySQL Driver not found", 500, e);
+        }
         }
         return connection;
     }
