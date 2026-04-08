@@ -1,3 +1,4 @@
 .DS_Store
 java/lib/*.jar
 java/lib/*.jar
+java/out/
