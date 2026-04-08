@@ -37,10 +37,24 @@ public class OrderDAO implements IOrderOperations {
             int newOrderID = cs.getInt(5);
             System.out.println("Order placed successfully! Order ID: " + newOrderID);
         } catch (SQLException e) {
-            System.out.println("PlaceOrder error: " + e.getMessage());
+            try { throw new OrderException("Failed to place order: " + e.getMessage()); }
+            catch (OrderException oe) { oe.printDetails(); }
         }
     }
-
+    // --- PROCESS PAYMENT via stored procedure ---
+public void processPayment(int orderID, String method, String transactionID) {
+    String sql = "{CALL ProcessPayment(?, ?, ?)}";
+    try (CallableStatement cs = conn.prepareCall(sql)) {
+        cs.setInt(1, orderID);
+        cs.setString(2, method);
+        cs.setString(3, transactionID);
+        cs.execute();
+        System.out.println("Payment processed for Order ID: " + orderID);
+    } catch (SQLException e) {
+        try { throw new PaymentException("Payment failed: " + e.getMessage(), transactionID); }
+        catch (PaymentException pe) { pe.printDetails(); }
+    }
+}
     // --- VIEW ORDERS BY CUSTOMER (PreparedStatement) ---
     @Override
     public void viewOrdersByCustomer(int customerID) {
@@ -134,7 +148,8 @@ public class OrderDAO implements IOrderOperations {
             cs.execute();
             System.out.println("Delivery partner assigned to Order ID: " + orderID);
         } catch (SQLException e) {
-            System.out.println("AssignPartner error: " + e.getMessage());
+            try { throw new DeliveryException("Failed to assign partner: " + e.getMessage()); }
+            catch (DeliveryException de) { de.printDetails(); }
         }
     }
 }
