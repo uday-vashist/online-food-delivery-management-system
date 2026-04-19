@@ -139,6 +139,37 @@ public void processPayment(int orderID, String method, String transactionID) {
             System.out.println("ViewCustomers error: " + e.getMessage());
         }
     }
+  // --- DELETE CUSTOMER with audit log verification ---
+// Trigger 7 blocks if active orders exist
+// Trigger 6 logs deleted customer data into CustomerDeletionLog
+public void deleteCustomer(int customerID) {
+    String deleteSql = "DELETE FROM Customer WHERE CustomerID = ?";
+    String logSql    = "SELECT * FROM CustomerDeletionLog WHERE CustomerID = ? ORDER BY DeletedAt DESC LIMIT 1";
+
+    try (PreparedStatement ps = conn.prepareStatement(deleteSql)) {
+        ps.setInt(1, customerID);
+        int rows = ps.executeUpdate();
+        if (rows > 0) {
+            System.out.println("Customer " + customerID + " deleted successfully.");
+            // Show audit log entry created by trigger
+            try (PreparedStatement logPs = conn.prepareStatement(logSql)) {
+                logPs.setInt(1, customerID);
+                ResultSet rs = logPs.executeQuery();
+                if (rs.next()) {
+                    System.out.println("Audit Log Entry Created:");
+                    System.out.println("  CustomerID : " + rs.getInt("CustomerID"));
+                    System.out.println("  Name       : " + rs.getString("Name"));
+                    System.out.println("  Email      : " + rs.getString("Email"));
+                    System.out.println("  DeletedAt  : " + rs.getTimestamp("DeletedAt"));
+                }
+            }
+        } else {
+            System.out.println("Customer not found.");
+        }
+    } catch (SQLException e) {
+        System.out.println("Delete failed: " + e.getMessage());
+    }
+}
 
     // --- ASSIGN DELIVERY PARTNER via stored procedure ---
     public void assignDeliveryPartner(int orderID) {

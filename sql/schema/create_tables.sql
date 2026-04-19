@@ -246,3 +246,20 @@ CREATE TABLE OrderCoupon (
     FOREIGN KEY (OrderID)  REFERENCES Orders(OrderID),
     FOREIGN KEY (CouponID) REFERENCES Coupon(CouponID)
 );
+
+-- Audit log for deleted customers
+CREATE TABLE CustomerDeletionLog (
+    LogID       INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerID  INT          NOT NULL,
+    Name        VARCHAR(100),
+    Email       VARCHAR(100),
+    DeletedAt   DATETIME     DEFAULT CURRENT_TIMESTAMP
+);
+-- Audit log for deleted customers
+CREATE TABLE CustomerDeletionLog (
+    LogID       INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerID  INT          NOT NULL,
+    Name        VARCHAR(100),
+    Email       VARCHAR(100),
+    DeletedAt   DATETIME     DEFAULT CURRENT_TIMESTAMP
+);

@@ -20,6 +20,7 @@ public class Main {
             System.out.println("5. Assign Delivery Partner");
             System.out.println("6. Top 5 Restaurants by Revenue");
             System.out.println("7. Process Payment");
+            System.out.println("8. Delete Customer");
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
 
@@ -65,7 +66,12 @@ public class Main {
                     System.out.print("Payment Method (Cash/Card/UPI/Wallet): "); String method = scanner.next();
                     System.out.print("Transaction ID: "); String txnID = scanner.next();
                     dao.processPayment(payOrderID, method, txnID);
-                    break;
+                case 8:
+        System.out.print("Customer ID to delete: ");
+                    int delID = scanner.nextInt();
+    dao.deleteCustomer(delID);
+    break;
+                    
                 case 0:
                     System.out.println("Exiting. Goodbye!");
                     DBConnection.closeConnection();

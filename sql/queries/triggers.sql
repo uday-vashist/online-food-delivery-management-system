@@ -129,7 +129,6 @@ SELECT * FROM OrderStatusHistory WHERE OrderID = 200; -- should have new entry
 -- ========================
 -- Should fail (order 1 is already Delivered)
 -- UPDATE Orders SET Status = 'Cancelled' WHERE OrderID = 1;
-
 -- ========================
 -- TRIGGER 6: Log customer data before deletion (audit trail)
 -- ========================
@@ -171,7 +170,18 @@ DELIMITER ;
 -- ========================
 -- Should fail (CustomerID 1 has active orders)
 -- DELETE FROM Customer WHERE CustomerID = 1;
-
 -- Should succeed and log (CustomerID 50 has only delivered orders)
 DELETE FROM Customer WHERE CustomerID = 50;
+SELECT * FROM CustomerDeletionLog;
+
+
+-- Test for tigger: Sample Entry
+-- add a fresh customer with no orders
+INSERT INTO Customer (Name, Email, Phone, Password) 
+VALUES ('Test User', 'test@delete.com', '9999999999', 'test123');
+-- get the new ID
+SELECT CustomerID FROM Customer WHERE Email = 'test@delete.com';
+-- delete it (trigger fires, logs it)
+DELETE FROM Customer WHERE Email = 'test@delete.com';
+-- verify log
 SELECT * FROM CustomerDeletionLog;

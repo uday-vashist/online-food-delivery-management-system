@@ -3,7 +3,7 @@ package fooddelivery;
 // abstract: cannot be instantiated directly, must be subclassed
 public abstract class Entity {
 
-    private int id;
+    protected int id;
     private String name;
 
     // Constructor using 'this' to distinguish parameter from field
