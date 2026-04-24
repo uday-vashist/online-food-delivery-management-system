@@ -2,3 +2,4 @@
 java/lib/*.jar
 java/lib/*.jar
 java/out/
+*.class
